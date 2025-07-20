@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="image/nak.png" type="image/png">
+    <title>Annoying Dusk 官方网站</title>
+    <style>
+        /* ===== 全局样式 ===== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh; /* 确保足够滚动空间 */
+            background-color: #0a0a1a; /* 深色备用背景 */
+            overflow-x: hidden;
+        }
+
+        /* ===== 背景容器 - 支持缩放动画 ===== */
+        .image-container {
+            position: relative; /* 相对定位确保随页面滚动 */
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* 关键修复：初始缩放150%并渐显 */
+            opacity: 0;
+            transform: scale(1.5); /* 初始放大150% */
+            animation: 
+                scaleDown 2.5s ease forwards, /* 缩放动画 */
+                fadeIn 1.8s ease forwards; /* 渐显动画 */
+        }
+        
+        /* === 关键帧动画定义 === */
+        @keyframes scaleDown {
+            to { transform: scale(1); } /* 最终缩放至100% */
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; } /* 渐显至完全可见 */
+        }
+
+        /* ===== 标题容器 ===== */
+        .title-overlay {
+            position: absolute;
+            top: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            width: 72%;
+            max-width: center;
+            /* 标题独立渐显（延迟0.8秒触发） */
+            animation: fadeIn 1.5s ease 0.8s forwards;
+            pointer-events: none;
+        }
+        
+        /* ===== 按钮容器 ===== */
+        .button-container {
+            position: relative;
+            width: 25%;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 10px; /* 位于首屏下方 */
+        }
+        
+        .interactive-btn {
+            padding: 16px 35px;
+            font-size: 1.25rem;
+            background: linear-gradient(45deg, #7a1fdb, #4a0078);
+            color: rgb(255, 255, 255);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            /* 唯一新增代码：精准添加下方空间 */
+        }
+        .interactive-btn:hover { transform: scale(1.12); }
+        .interactive-btn:active { transform: scale(0.94); }
+    </style>
+</head>
+<body>
+    <!-- 背景容器（含缩放动画） -->
+    <div class="image-container">
+        <img src="image/AnnoyingDusk.jpg" alt="动态缩放背景" class="bg-image" id="bgImage">
+    </div>
+    
+    <!-- 标题容器 -->
+    <div class="title-overlay">
+        <img src="image/title.png" alt="标题图片" id="titleImage">
+    </div>
+    
+    <!-- 按钮容器 -->
+    <div class="button-container">
+        <button class="interactive-btn" id="man">了解「Annoying Dusk」</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('man').addEventListener('click', function() {
+                window.open('introduce.html', '_blank');
+            });
+        });
+    </script>
+
+    <!-- 无需JS触发背景动画 -->
+</body>
+</html>
