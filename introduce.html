@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="image/nak.png" type="image/png">
+    <title>介绍</title>
+    <style>
+        /* ===== 全局字体放大 ===== */
+        body {
+            font-size: 1.2rem;
+            font-family: "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            padding: 20px;
+            background-color: #0a0a1a;
+        }
+
+        /* ===== 逐字动画容器 ===== */
+        .char-by-char {
+            display: inline-block;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* ===== 字符动画样式 ===== */
+        .char {
+            opacity: 0;
+            display: inline-block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* ===== 渐显动画定义 ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .introduce {
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        /* ==== 核心修改：初始隐藏所有段落 ==== */
+        .animated-text {
+            display: block; /* 确保每行独立换行 */
+            opacity: 0;     /* 初始透明 */
+            margin-bottom: 15px; /* 行间距 */
+        }
+    </style>
+</head>
+<body>
+    <div class="introduce">
+        <h1>Annoying Dusk</h1>
+        <p class="animated-text" id="1">Annoying Dusk是NAK(我)做的一款由《Annoying Villagers》动画改变而成的整合包</p>
+        <p class="animated-text" id="2">里面有大量的原著武器和二创武器</p>
+        <p class="animated-text" id="3">还有玩家投稿的二创武器</p>
+        <p class="animated-text" id="4">拥有及其炫酷的特效</p>
+        <p class="animated-text" id="5">生物战力还原原著</p>
+        <p class="animated-text" id="6">目前整合包已更新到3.0版本</p>
+        <p class="animated-text" id="7">大部分内容都已经完善</p>
+        <p class="animated-text" id="8">但还有一些BUG</p>
+        <p class="animated-text" id="9">和配置问题导致的崩溃</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有需要动画的行
+            const textElements = document.querySelectorAll('.animated-text');
+            const lines = Array.from(textElements).sort((a, b) => 
+                parseInt(a.id) - parseInt(b.id)
+            );
+            
+            // 每行字符之间的间隔（毫秒）
+            const charDelay = 35;
+            // 行与行之间的间隔（毫秒）
+            const lineDelay = 20;
+            
+            // 处理单行文字动画
+            function animateLine(lineElement, delay) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        const text = lineElement.textContent;
+                        lineElement.innerHTML = '';
+                        
+                        // 拆分文字为字符并添加动画
+                        text.split('').forEach((char, charIndex) => {
+                            const charSpan = document.createElement('span');
+                            charSpan.className = 'char';
+                            charSpan.textContent = char === ' ' ? ' ' : char;
+                            charSpan.style.animationDelay = `${charIndex * charDelay}ms`;
+                            lineElement.appendChild(charSpan);
+                        });
+                        
+                        // 显示整行（触发动画）
+                        lineElement.style.opacity = 1; // 解除初始隐藏[5,7](@ref)
+                        
+                        // 监听最后一个字符的动画结束
+                        const lastChar = lineElement.lastChild;
+                        lastChar.addEventListener('animationend', () => {
+                            resolve();
+                        }, { once: true });
+                    }, delay);
+                });
+            }
+            
+            // 按顺序处理所有行
+            async function animateAllLines() {
+                for (let i = 0; i < lines.length; i++) {
+                    await animateLine(lines[i], i === 0 ? 0 : lineDelay);
+                }
+            }
+            
+            // 开始动画
+            animateAllLines();
+        });
+    </script>
+</body>
+</html>
